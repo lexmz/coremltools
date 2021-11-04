@@ -62,6 +62,12 @@ def _add_conv_like_op(
     add_func, get_params_func, params_dict, builder, node, graph, err
 ):
     rank = builder._get_rank(node.inputs[0])
+    
+    print("_add_conv_like_op rank:", rank)
+    
+    if rank < 0 and node.op_type == "Conv" and "w_shape" in params_dict:
+        rank = len(params_dict["w_shape"])
+        
     if rank == 4:
         get_params_func(builder, node, graph, err, params_dict)
         add_func(
